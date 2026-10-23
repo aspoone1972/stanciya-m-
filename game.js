@@ -104,7 +104,7 @@
   function sliceFrames(img) {
     const w = img.naturalWidth, h = img.naturalHeight;
     const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
-    const c = cv.getContext('2d'); c.drawImage(img, 0, 0);
+    const c = cv.getContext('2d', { willReadFrequently: true }); c.drawImage(img, 0, 0);
     const data = c.getImageData(0, 0, w, h).data;
     // column occupancy
     const colOcc = new Array(w).fill(0);
@@ -168,7 +168,7 @@
       const cv = document.createElement('canvas');
       cv.width = img.naturalWidth;
       cv.height = img.naturalHeight;
-      const c = cv.getContext('2d');
+      const c = cv.getContext('2d', { willReadFrequently: true });
       c.drawImage(img, 0, 0);
       const data = c.getImageData(0, 0, img.naturalWidth, img.naturalHeight).data;
       const w = img.naturalWidth, h = img.naturalHeight;
@@ -659,10 +659,16 @@
   }
 
   function drawPlayer() {
-    if (!anim.run || anim.run.length === 0) return;
+    if (!anim || !anim.run || anim.run.length === 0) return;
     let frames = player.mode === 'jump' ? anim.jump : (player.mode === 'slide' ? anim.slide : anim.run);
-    const fr = frames[Math.floor(player.frameT) % frames.length];
-    player.frameT += dtGlobal * (player.mode === 'jump' ? 8 : (player.mode === 'slide' ? 16 : (player.mode === 'attack' ? 14 : 10)));
+    if (!frames || frames.length === 0) frames = anim.run;
+    if (!Number.isFinite(player.frameT)) player.frameT = 0;
+    let idx = Math.floor(player.frameT) % frames.length;
+    if (idx < 0) idx += frames.length;
+    const fr = frames[idx];
+    if (!fr || !fr.h) return;
+    const dtStep = Number.isFinite(dtGlobal) ? dtGlobal : 0;
+    player.frameT += dtStep * (player.mode === 'jump' ? 8 : (player.mode === 'slide' ? 16 : (player.mode === 'attack' ? 14 : 10)));
 
     const targetH = 120;
     const s = targetH / fr.h;
@@ -813,8 +819,10 @@
         ctx.drawImage(f.canvas, -f.w * s / 2, -f.h * s / 2, f.w * s, f.h * s);
       } else if (anim.run && anim.run.length) {
         const fr = anim.run[Math.floor(t * 8) % anim.run.length];
-        const s = (H * 0.4) / fr.h;
-        ctx.drawImage(fr.canvas, -fr.w * s / 2, -fr.h * s / 2, fr.w * s, fr.h * s);
+        if (fr && fr.h) {
+          const s = (H * 0.4) / fr.h;
+          ctx.drawImage(fr.canvas, -fr.w * s / 2, -fr.h * s / 2, fr.w * s, fr.h * s);
+        }
       }
       ctx.restore();
       // заголовок
