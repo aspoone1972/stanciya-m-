@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Кислый в путь — браузерная игра</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="frame">
+    <canvas id="game" width="960" height="540" aria-label="Игра Бегалка"></canvas>
+
+    <div id="splash" class="splash">
+      <button id="btn-splash-start" class="ui-btn">СТАРТ</button>
+    </div>
+    <div id="pause" class="paused hidden">
+      <div class="paused-title">ПАУЗА</div>
+      <div class="paused-sub">Нажмите ESC или клик для продолжения</div>
+    </div>
+    <div id="log">
+      <div style="color:#a9b8ff; font-size:12px; margin-bottom:6px;">Загрузка ассетов…</div>
+    </div>
+    <div id="ui" class="ui hidden">
+      <div id="ui-title" class="ui-title">Кислый в путь</div>
+      <div id="ui-sub" class="ui-sub">ПРОБЕЛ — выстрел лазерами из глаз, СТРЕЛКА ВВЕРХ — прыжок, СТРЕЛКА ВНИЗ — подкат, ESC — пауза</div>
+      <button id="btn-start" class="ui-btn">СТАРТ</button>
+      <div id="ui-hint" class="ui-hint">ПРОБЕЛ — выстрел лазерами из глаз &nbsp;•&nbsp; СТРЕЛКА ВВЕРХ — прыжок &nbsp;•&nbsp; СТРЕЛКА ВНИЗ — подкат</div>
+    </div>
+    <button id="btn-fire" class="touch-fire hidden" aria-label="Выстрел">🔥</button>
+    <div id="hud" class="hud"></div>
+  </div>
+  <script src="sound.js"></script>
+  <script src="game.js?v=2"></script>
+  <style>
+    #splash {
+      position: absolute; inset: 0; z-index: 12;
+      background-size: cover; background-position: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    }
+    #splash.hidden { display: none; }
+    #btn-splash-start { margin-bottom: 80px; }
+    #pause {
+      position: absolute; inset: 0; z-index: 14;
+      background: rgba(5,6,15,0.8);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #fff; text-align: center;
+    }
+    #pause.hidden { display: none; }
+    .paused-title { font-size: 32px; letter-spacing: 4px; color: #ffe14d; text-shadow: 2px 2px #000; margin-bottom: 10px; }
+    .paused-sub { font-family: "Pixelify Sans", sans-serif; font-size: 16px; color: #cfd8dc; }
+    #log {
+      position: absolute; left: 12px; bottom: 12px; right: 12px;
+      max-height: 120px; overflow-y: auto; z-index: 50;
+      background: rgba(0,0,0,0.75); padding: 8px 10px; border-radius: 6px;
+      border: 1px solid #444; font-family: monospace; font-size: 12px;
+      pointer-events: none; display: none;
+    }
+    #log.visible { display: block; }
+    body.log-open #log { display: block; }
+  </style>
+  <script>
+    window.addEventListener('load', function(){
+      var log = document.getElementById('log');
+      if (log && log.children.length > 1) {
+        log.classList.add('visible');
+        document.body.classList.add('log-open');
+      }
+    });
+  </script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    (function () {
+      if (window.Telegram && window.Telegram.WebApp) {
+        try { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); } catch (e) {}
+      }
+    })();
+  </script>
+</body>
+</html>

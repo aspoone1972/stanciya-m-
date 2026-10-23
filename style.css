@@ -1,0 +1,111 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow: hidden; background: #0b0e1a; }
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Press Start 2P", "Pixelify Sans", monospace;
+  touch-action: none;
+  -webkit-user-select: none; user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#frame {
+  position: relative;
+  border: 10px solid #4b5263;
+  border-top: 14px solid #8d91ad;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 4px #2a2d3a,
+    0 0 0 8px #161823,
+    0 20px 40px rgba(0,0,0,0.7),
+    inset 0 0 0 3px #5a4fa0;
+  background: #05060f;
+  line-height: 0;
+  max-width: 98vw;
+  max-height: 98vh;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #05060f;
+  image-rendering: auto;
+}
+
+/* ---------- UI overlay ---------- */
+.ui {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(5,6,15,0.85);
+  z-index: 10;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+.ui.hidden { display: none !important; }
+.ui-title { font-size: 34px; letter-spacing: 4px; color: #ffe14d; text-shadow: 2px 2px #000; margin-bottom: 8px; }
+.ui-sub { font-family: "Pixelify Sans", sans-serif; font-size: 15px; color: #cfd8dc; margin-bottom: 26px; line-height: 1.5; }
+.ui-hint { font-family: "Pixelify Sans", sans-serif; font-size: 12px; color: #a9b8ff; margin-top: 14px; }
+
+.ui-btn {
+  font-family: "Press Start 2P", "Pixelify Sans", monospace;
+  font-size: 17px; padding: 14px 40px; color: #fff; background: linear-gradient(180deg,#5b64ff,#3a42c8);
+  border: 3px solid #fff; border-radius: 8px; cursor: pointer; box-shadow: 0 6px 0 #1a2055;
+}
+.ui-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #1a2055; }
+
+/* ---------- HUD ---------- */
+.hud {
+  position: absolute; top: 14px; left: 14px; right: 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 12; pointer-events: none;
+  font-family: "Press Start 2P", monospace; font-size: 14px; color: #ffe14d;
+  text-shadow: 1px 1px #000;
+}
+.hud .lives { color: #ff6b6b; }
+.hud .heart-img { width: 30px; height: 30px; margin-right: 6px; filter: drop-shadow(0 1px 2px #000); }
+.hud .heart-img.dead { filter: grayscale(1) brightness(0.05) contrast(5) opacity(0.7); }
+.hud .bonus-img { width: 26px; height: 26px; margin: 0; filter: drop-shadow(0 1px 2px #000); }
+.hud .bonus-bar { display: inline-flex; gap: 0; margin-left: 10px; align-items: center; }
+.hud .bonus-seg { width: 14px; height: 14px; border: 2px solid #ffe14d; background: #0b0e1a; border-radius: 3px; box-shadow: 0 0 4px rgba(255,225,77,0.3); margin-left: 3px; }
+.hud .bonus-img + .bonus-seg { margin-left: 0; }
+.hud .bonus-seg.filled { background: #ffe14d; box-shadow: 0 0 8px #ffe14d; }
+
+/* ---------- сенсорные кнопки ---------- */
+.touch {
+  position: absolute; inset: 0; z-index: 14; pointer-events: none;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding: 24px 28px;
+}
+.touch.hidden { display: none !important; }
+.touch-btn {
+  pointer-events: auto;
+  font-family: "Press Start 2P", "Pixelify Sans", monospace;
+  font-size: 13px; padding: 12px 22px; color: #fff; background: rgba(255,255,255,0.12);
+  border: 2px solid rgba(255,255,255,0.35); border-radius: 10px; cursor: pointer;
+  backdrop-filter: blur(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.35);
+}
+.touch-btn:active { background: rgba(255,255,255,0.28); transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.35); }
+
+@media (max-width: 640px) {
+  #frame { border-width: 6px; border-top-width: 9px; border-radius: 7px; }
+  .ui-title { font-size: 26px; }
+  .touch-btn { font-size: 11px; padding: 10px 16px; }
+.touch-fire {
+  position: absolute;
+  left: 16px; bottom: 16px;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: 3px solid #ffe14d;
+  background: rgba(255, 107, 107, 0.85);
+  color: #fff; font-size: 26px;
+  z-index: 15; cursor: pointer;
+  box-shadow: 0 0 12px rgba(255,107,107,0.6);
+  touch-action: manipulation;
+}
+.touch-fire.hidden { display: none; }
+
+}
